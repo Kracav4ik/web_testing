@@ -11,13 +11,20 @@ def equal_files(path1, path2):
 
 
 def f(text_program, path):
-    tdy = tempfile.TemporaryDirectory()
-    file = open(tdy.name + "/run.py", "w")
-    file.write(text_program)
-    file.close()
-    shutil.copyfile(os.path.join(path, "1.in"), os.path.join(tdy.name, "input.txt"))
-    subprocess.run(["python.exe", "run.py"], cwd=tdy.name, timeout=2)
-    print("True" if equal_files(os.path.join(tdy.name, "output.txt"), os.path.join(path, "1.out")) else "False")
+    files = os.listdir("./demo_tests/")
+    names = []
+    for fname in files:
+        if fname.endswith(".in"):
+            names.append(os.path.splitext(fname)[0])
+    for name in names:
+        tdy = tempfile.TemporaryDirectory()
+        with open(os.path.join(tdy.name, "run.py"), "w") as file:
+            file.write(text_program)
+        shutil.copyfile(os.path.join(path, "%s.in" % name), os.path.join(tdy.name, "input.txt"))
+        subprocess.run(["python.exe", "run.py"], cwd=tdy.name, timeout=2)
+        print("True" if equal_files(os.path.join(tdy.name, "output.txt"),
+                                    os.path.join(path, "%s.out" % name)) else "False")
+
 
 if __name__ == "__main__":
     f("""
