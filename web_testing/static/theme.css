@@ -1,6 +1,7 @@
 body {
     text-align: center;
 }
+
 table.wrapper {
     text-align: center;
     border-collapse: collapse;
@@ -15,14 +16,97 @@ p {
     font-family: monospace;
 }
 
-/*
-small {
-    font-size: xx-small;
-}
-*/
-
 h2 {
-    font-family: helvetica;
-    font-size: large;
+font-family: helvetica;
+font-size: large;
+text-align: center;
+}
+
+table {
+    font-family: monospace;
+}
+
+i {
+    color: green;
+    font-style: normal;
+}
+
+i.first-to-solve {
+    display: block;
+    background-color: #c0ffc0;
+    font-style: normal;
+}
+
+s {
+    font-size: 10;
+    font-face: arial;
+    font-style: normal;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: x-small;
+}
+
+th.solved {
     text-align: center;
+    width: 4%;
+}
+
+th.penalty {
+    text-align: right;
+    padding-right: 10pt;
+    width: 4%;
+}
+
+th.party {
+    text-align: left;
+    padding-left: 10pt;
+}
+
+th.rank {
+    text-align: right;
+    padding-right: 10pt;
+    width: 4%;
+}
+
+th.problem {
+    text-align: center;
+    width: 4%;
+}
+
+td {
+    text-align: center;
+}
+
+td.solved {
+    text-align: right;
+}
+
+td.penalty {
+    text-align: right;
+    padding-right: 10pt;
+}
+
+td.party {
+    text-align: left;
+    padding-left: 10pt;
+}
+
+td.partyOther {
+    text-align: left;
+    padding-left: 10pt;
+    color: grey;
+}
+
+td.rank {
+    text-align: right;
+    padding-right: 10pt;
+}
+
+td.problem {
+    text-align: center;
+}
+
+b {
+    color: #c06060;
+    font-weight: normal;
 }
