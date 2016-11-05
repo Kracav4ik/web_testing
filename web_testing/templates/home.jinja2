@@ -37,140 +37,32 @@
                             <hr size="1" color="000000">
                         </td>
                     </tr>
+                    {% for team in teams %}
                     <tr bgcolor="d0f0ff">
-                        <td class="party">Team Sereja (Сергей Слотин, Антонио Вивальди, Никколо Паганини)</td>
-                        <td class="problem"><i>+<br>
-                            <s>16:17</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>126:04</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>241:52</s></i></td>
-                        <td class="problem"><i>+2<br>
-                            <s>41:32</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>149:08</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+<br>
-                            <s>176:57</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>3:10</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>110:38</s></i></td>
-                        <td class="problem"><i>+1<br>
-                            <s>102:11</s></i></td>
-                        <td class="problem"><i>+1<br>
-                            <s>75:39</s></i></td>
-                        <td class="solved">10</td>
-                        <td class="penalty">1119</td>
-                        <td class="rank">1</td>
+                        <td class="party">{{ team.name }}</td>
+                        {% for task in tasks %}
+                            <td class="problem">
+                            {% if task in team.tasks %}
+                            {% set task_info = team.tasks[task] %}
+                            {% set tag, prefix = 'i+' if task_info.is_solved else 'b-' %}
+                                <{{ tag }}>{{ prefix }}
+                                {%- if task_info.failed_tries > 0 -%}
+                                    {{ task_info.failed_tries }}
+                                {% endif %}
+                                {% if task_info.solve_time %}
+                                    <br><s>{{ task_info.solve_time }}</s>
+                                {% endif %}
+                                </{{ tag }}>
+                            {% else %}
+                                .
+                            {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td class="solved">{{ team.solved }}</td>
+                        <td class="penalty">{{ team.penalty }}</td>
+                        <td class="rank">{{ team.rank }}</td>
                     </tr>
-                    <tr bgcolor="c8e8f8">
-                        <td class="party">Мытищи, Школа Программистов - 1 (Николенко Даниил, Ковальков Дмитрий, Гаев
-                            Александр)
-                        </td>
-                        <td class="problem"><i>+<br>
-                            <s>75:23</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>53:15</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>267:25</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>83:54</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>166:11</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+1<br>
-                            <s>211:55</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>44:03</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>80:53</s></i></td>
-                        <td class="problem"><i>+1<br>
-                            <s>107:11</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>57:44</s></i></td>
-                        <td class="solved">10</td>
-                        <td class="penalty">1183</td>
-                        <td class="rank">2</td>
-                    </tr>
-                    <tr bgcolor="ffffff">
-                        <td class="party">Витебск01 (Артур Петуховский, Марк Корнейчик, Владимир Кунцевич)</td>
-                        <td class="problem"><i>+<br>
-                            <s>27:18</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>97:13</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+1<br>
-                            <s>11:19</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>123:23</s></i></td>
-                        <td class="problem"><b>-1</b></td>
-                        <td class="problem"><i>+<br>
-                            <s>166:57</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>5:52</s></i></td>
-                        <td class="problem"><i>+2<br>
-                            <s>148:15</s></i></td>
-                        <td class="problem"><i>+1<br>
-                            <s>58:01</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>73:04</s></i></td>
-                        <td class="solved">9</td>
-                        <td class="penalty">788</td>
-                        <td class="rank">3</td>
-                    </tr>
-                    <tr bgcolor="f8f8f8">
-                        <td class="party">gym2mog (Александр Керножицкий, Дмитрий Клебанов, Евгений Тумащик)</td>
-                        <td class="problem"><i>+<br>
-                            <s>31:25</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>151:43</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+<br>
-                            <s>38:31</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>186:12</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+1<br>
-                            <s>248:34</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>15:41</s></i></td>
-                        <td class="problem"><i>+2<br>
-                            <s>121:14</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>56:04</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>95:27</s></i></td>
-                        <td class="solved">9</td>
-                        <td class="penalty">1001</td>
-                        <td class="rank">4</td>
-                    </tr>
-                    <tr bgcolor="ffffff">
-                        <td class="party">Saint Veronika (Арсений Бабушкин, Константин Махнёв, Дмитрий Рыбин)</td>
-                        <td class="problem"><i>+<br>
-                            <s>13:42</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>122:09</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+<br>
-                            <s>25:52</s></i></td>
-                        <td class="problem"><i>+2<br>
-                            <s>269:18</s></i></td>
-                        <td class="problem">.</td>
-                        <td class="problem"><i>+1<br>
-                            <s>177:04</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>12:50</s></i></td>
-                        <td class="problem"><i>+3<br>
-                            <s>92:23</s></i></td>
-                        <td class="problem"><i>+3<br>
-                            <s>102:52</s></i></td>
-                        <td class="problem"><i>+<br>
-                            <s>51:52</s></i></td>
-                        <td class="solved">9</td>
-                        <td class="penalty">1043</td>
-                        <td class="rank">5</td>
-                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </center>
