@@ -9,12 +9,17 @@ class TaskInfo:
 
 
 class TeamInfo:
-    def __init__(self, name, tasks, solved, rank, penalty):
+    def __init__(self, name, tasks, penalty):
         self.name = name
         self.tasks = tasks
-        self.solved = solved
-        self.rank = rank
         self.penalty = penalty
+
+    def solved_count(self):
+        i = 0
+        for v in self.tasks.values():
+            if v.is_solved:
+                i += 1
+        return i
 
 
 @view_config(route_name='home', renderer='templates/home.jinja2')
@@ -41,8 +46,6 @@ def my_view(request):
                     "J": TaskInfo(True, 1, "102:11"),
                     "K": TaskInfo(True, 1, "75:39"),
                 },
-                10,
-                1,
                 1119
             ),
             TeamInfo(
@@ -59,8 +62,6 @@ def my_view(request):
                     "J": TaskInfo(True, 1, "107:11"),
                     "K": TaskInfo(True, 0, "57:44"),
                 },
-                10,
-                2,
                 1183
             ),
             TeamInfo(
@@ -77,8 +78,6 @@ def my_view(request):
                     "J": TaskInfo(True, 1, "58:01"),
                     "K": TaskInfo(True, 0, "73:04"),
                 },
-                9,
-                3,
                 788
             ),
             TeamInfo(
@@ -94,8 +93,6 @@ def my_view(request):
                     "J": TaskInfo(True, 0, "56:04"),
                     "K": TaskInfo(True, 0, "95:27"),
                 },
-                9,
-                4,
                 1001
             ),
             TeamInfo(
@@ -111,8 +108,6 @@ def my_view(request):
                     "J": TaskInfo(True, 3, "102:52"),
                     "K": TaskInfo(True, 0, "51:52"),
                 },
-                9,
-                5,
                 1043
             ),
             TeamInfo(
@@ -129,8 +124,6 @@ def my_view(request):
                     "J": TaskInfo(True, 1, "90:23"),
                     "K": TaskInfo(True, 0, "108:07"),
                 },
-                9,
-                6,
                 1368
             ),
         ],

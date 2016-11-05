@@ -17,28 +17,31 @@
                     <tbody>
                     <tr bgcolor="ffffff">
                         <th class="party">Команда</th>
-                        <th class="problem">A</th>
-                        <th class="problem">B</th>
-                        <th class="problem">C</th>
-                        <th class="problem">D</th>
-                        <th class="problem">E</th>
-                        <th class="problem">F</th>
-                        <th class="problem">G</th>
-                        <th class="problem">H</th>
-                        <th class="problem">I</th>
-                        <th class="problem">J</th>
-                        <th class="problem">K</th>
+                        {% for task in tasks %}
+                            <th class="problem">{{ task }}</th>
+                        {% endfor %}
                         <th class="solved">=</th>
                         <th class="penalty">Время</th>
                         <th class="rank">Место</th>
                     </tr>
                     <tr height="3">
-                        <td colspan="15">
+                        <td colspan="{{ tasks|length + 4 }}">
                             <hr size="1" color="000000">
                         </td>
                     </tr>
+                    {% set bg_cycler = cycler(0, 1) %}
+                    {% set bg_color = {
+                        True : ("d0f0ff", "c8e8f8"),
+                        False: ("ffffff", "f8f8f8")
+                    } %}
+                    {% set current_val = teams[0].solved_count() %}
+                    {% set current_col = True %}
                     {% for team in teams %}
-                    <tr bgcolor="d0f0ff">
+                        {% if current_val != team.solved_count() %}
+                            {% set current_val = team.solved_count() %}
+                            {% set current_col = loop.cycle(False, True) %}
+                        {% endif %}
+                        <tr bgcolor="{{ bg_color[current_col][bg_cycler.__next__()] }}">
                         <td class="party">{{ team.name }}</td>
                         {% for task in tasks %}
                             <td class="problem">
@@ -58,9 +61,9 @@
                             {% endif %}
                             </td>
                         {% endfor %}
-                        <td class="solved">{{ team.solved }}</td>
+                        <td class="solved">{{ team.solved_count() }}</td>
                         <td class="penalty">{{ team.penalty }}</td>
-                        <td class="rank">{{ team.rank }}</td>
+                        <td class="rank">{{ loop.index }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
