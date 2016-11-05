@@ -1,0 +1,28 @@
+body {
+    text-align: center;
+}
+table.wrapper {
+    text-align: center;
+    border-collapse: collapse;
+    border: none;
+    margin: 0pt;
+    padding: 0pt;
+    width: 100%;
+}
+
+p {
+    text-align: center;
+    font-family: monospace;
+}
+
+/*
+small {
+    font-size: xx-small;
+}
+*/
+
+h2 {
+    font-family: helvetica;
+    font-size: large;
+    text-align: center;
+}
