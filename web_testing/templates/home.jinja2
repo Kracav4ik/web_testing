@@ -12,63 +12,64 @@
             <p>Попыток: {{ triesTotal }} удачных: {{ triesPassed }}
                 <br>Последняя удачная попытка: {{ lastTeam }}, {{ lastTask }}, {{ lastTime }} <br>
             </p>
-            <center>
-                <table class="standings">
-                    <tbody>
-                    <tr bgcolor="ffffff">
-                        <th class="party">Команда</th>
-                        {% for task in tasks %}
-                            <th class="problem">{{ task }}</th>
-                        {% endfor %}
-                        <th class="solved">=</th>
-                        <th class="penalty">Время</th>
-                        <th class="rank">Место</th>
-                    </tr>
-                    <tr height="3">
-                        <td colspan="{{ tasks|length + 4 }}">
-                            <hr size="1" color="000000">
-                        </td>
-                    </tr>
-                    {% set bg_cycler = cycler(0, 1) %}
-                    {% set bg_color = {
-                        True : ("d0f0ff", "c8e8f8"),
-                        False: ("ffffff", "f8f8f8")
-                    } %}
-                    {% set current_val = teams[0].solved_count() %}
-                    {% set current_col = True %}
-                    {% for team in teams %}
-                        {% if current_val != team.solved_count() %}
-                            {% set current_val = team.solved_count() %}
-                            {% set current_col = loop.cycle(False, True) %}
-                        {% endif %}
-                        <tr bgcolor="{{ bg_color[current_col][bg_cycler.__next__()] }}">
-                        <td class="party">{{ team.name }}</td>
-                        {% for task in tasks %}
-                            <td class="problem">
-                            {% if task in team.tasks %}
-                            {% set task_info = team.tasks[task] %}
-                            {% set tag, prefix = 'i+' if task_info.is_solved else 'b-' %}
-                                <{{ tag }}>{{ prefix }}
-                                {%- if task_info.failed_tries > 0 -%}
-                                    {{ task_info.failed_tries }}
-                                {% endif %}
-                                {% if task_info.solve_time %}
-                                    <br><s>{{ task_info.solve_time }}</s>
-                                {% endif %}
-                                </{{ tag }}>
-                            {% else %}
-                                .
-                            {% endif %}
-                            </td>
-                        {% endfor %}
-                        <td class="solved">{{ team.solved_count() }}</td>
-                        <td class="penalty">{{ team.penalty }}</td>
-                        <td class="rank">{{ loop.index }}</td>
-                    </tr>
+            <table class="standings">
+                <tbody>
+                <tr bgcolor="ffffff">
+                    <th class="party">Команда</th>
+                    {% for task in tasks %}
+                        <th class="problem">{{ task }}</th>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </center>
+                    <th class="solved">=</th>
+                    <th class="penalty">Время</th>
+                    <th class="rank">Место</th>
+                </tr>
+                <tr>
+                    <td colspan="{{ tasks|length + 4 }}">
+                        <hr size="1" color="000000">
+                    </td>
+                </tr>
+                {% set bg_cycler = cycler(0, 1) %}
+                {% set bg_color = {
+                    True : ("d0f0ff", "c8e8f8"),
+                    False: ("ffffff", "f8f8f8")
+                } %}
+                {% set fucking_magic = teams|groupby('solved_count') %}
+                {% set current_solved = teams[0].solved_count %}
+                {% set initial_blues = fucking_magic|length is divisibleby 2 %}
+                {% set current_blues = initial_blues %}
+                {% set blues_cycler = cycler(not initial_blues, initial_blues) %}
+                {% for team in teams %}
+                    {% if current_solved != team.solved_count %}
+                        {% set current_solved = team.solved_count %}
+                        {% set current_blues = blues_cycler.__next__() %}
+                    {% endif %}
+                    <tr bgcolor="{{ bg_color[current_blues][bg_cycler.__next__()] }}">
+                    <td class="party">{{ team.name }}</td>
+                    {% for task in tasks %}
+                        <td class="problem">
+                        {% if task in team.tasks %}
+                        {% set task_info = team.tasks[task] %}
+                        {% set tag, prefix = 'i+' if task_info.is_solved else 'b-' %}
+                            <{{ tag }}>{{ prefix }}
+                            {%- if task_info.failed_tries > 0 -%}
+                                {{ task_info.failed_tries }}
+                            {% endif %}
+                            {% if task_info.solve_time %}
+                                <br><s>{{ task_info.solve_time }}</s>
+                            {% endif %}
+                            </{{ tag }}>
+                        {% else %}
+                            .
+                        {% endif %}
+                        </td>
+                    {% endfor %}
+                    <td class="solved">{{ team.solved_count }}</td>
+                    <td class="penalty">{{ team.penalty }}</td>
+                    <td class="rank">{{ loop.index }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </td>
     </tr>
     </tbody>

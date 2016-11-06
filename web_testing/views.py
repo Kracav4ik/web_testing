@@ -14,6 +14,7 @@ class TeamInfo:
         self.tasks = tasks
         self.penalty = penalty
 
+    @property
     def solved_count(self):
         i = 0
         for v in self.tasks.values():
