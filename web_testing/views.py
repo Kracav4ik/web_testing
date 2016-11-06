@@ -24,7 +24,7 @@ class TeamInfo:
 
 
 @view_config(route_name='home', renderer='templates/home.jinja2')
-def my_view(request):
+def show_standings(request):
     return {
         'triesTotal': '646',
         'triesPassed': '33',
@@ -129,3 +129,17 @@ def my_view(request):
             ),
         ],
     }
+
+
+@view_config(route_name='submit', renderer='templates/submit.jinja2')
+def submit_page(request):
+    program_file = request.POST.get("program")
+    if program_file is not None:
+        return {
+            "contents": program_file.file.read().decode('utf-8'),
+            "name": program_file.disposition_options["filename"]
+        }
+    return {
+        "contents": None
+    }
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>hello</title>
+    <link rel="stylesheet" href="static/theme.css">
+</head>
+<body>
+    <a href="home">Standings</a>
+    <hr>
+    <form action="/" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+        <label for="program">
+            Select file:
+        </label>
+        <input type="file" value="" id="program" name="program">
+        <input type="submit" value="submit">
+    </form>
+    {% if contents is not none %}
+        <hr>
+        <b> file name: '{{ name }}'</b>
+        <hr>
+        <div style="text-align: left;">
+            <pre>{{ contents }}</pre>
+        </div>
+    {% endif %}
+</body>
+</html>
