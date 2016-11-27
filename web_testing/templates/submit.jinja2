@@ -14,9 +14,9 @@
         <input type="file" value="" id="program" name="program">
         <input type="submit" value="submit">
     </form>
-    {% if contents is not none %}
+    {% if contents %}
         <hr>
-        <b> file name: '{{ name }}'</b>
+        id #{{ submit_id }}<b> file name: '{{ name }}'</b> {{ status }}
         <hr>
         <div style="text-align: left;">
             <pre>{{ contents }}</pre>

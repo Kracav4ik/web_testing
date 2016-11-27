@@ -1,6 +1,28 @@
 from pyramid.view import view_config
 
 
+class RunnersMap:
+    def __init__(self):
+        self.runner_ids = {}
+        self.next_id = 1
+
+    def new_id(self):
+        self.next_id += 1
+        return self.next_id - 1
+
+    def get(self, key):
+        return self.runner_ids.get(key, {})
+
+    def set(self, key, value):
+        self.runner_ids[key] = value
+
+    def get_latest(self):
+        return self.get(max(self.runner_ids.keys(), default=0))
+
+
+runners = RunnersMap()
+
+
 class TaskInfo:
     def __init__(self, is_solved, failed_tries, solve_time=None):
         self.is_solved = is_solved
@@ -134,12 +156,24 @@ def show_standings(request):
 @view_config(route_name='submit', renderer='templates/submit.jinja2')
 def submit_page(request):
     program_file = request.POST.get("program")
-    if program_file is not None:
-        return {
-            "contents": program_file.file.read().decode('utf-8'),
-            "name": program_file.disposition_options["filename"]
+    if program_file is not None and program_file != b'':
+        file_contents = program_file.file.read().decode('utf-8')
+        file_name = program_file.disposition_options["filename"]
+        new_id = runners.new_id()
+        data = {
+            "submit_id": new_id,
+            "contents": file_contents,
+            "name": file_name,
+            "status": "RUNNING",
         }
-    return {
-        "contents": None
-    }
+        runners.set(new_id, data)
+        return data
+    return runners.get_latest()
 
+
+@view_config(route_name='answer', renderer='templates/answer.jinja2')
+def answer_page(request):
+    print(request.GET.get("result"))
+    print(request.GET.get("run_id"))
+
+    return {}
