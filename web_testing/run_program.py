@@ -3,6 +3,8 @@ import shutil
 import subprocess
 import tempfile
 
+import sys
+
 
 def equal_files(path1, path2):
     file1 = open(path1, "br")
@@ -11,7 +13,7 @@ def equal_files(path1, path2):
 
 
 def f(text_program, path):
-    files = os.listdir("./demo_tests/")
+    files = os.listdir(path)
     names = []
     for fname in files:
         if fname.endswith(".in"):
@@ -21,7 +23,7 @@ def f(text_program, path):
         with open(os.path.join(tdy.name, "run.py"), "w") as file:
             file.write(text_program)
         shutil.copyfile(os.path.join(path, "%s.in" % name), os.path.join(tdy.name, "input.txt"))
-        subprocess.run(["python.exe", "run.py"], cwd=tdy.name, timeout=2)
+        subprocess.run([sys.executable, "run.py"], cwd=tdy.name, timeout=2)
         print("True" if equal_files(os.path.join(tdy.name, "output.txt"),
                                     os.path.join(path, "%s.out" % name)) else "False")
 
