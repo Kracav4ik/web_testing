@@ -177,7 +177,7 @@ def submit_page(request):
             "status": "RUNNING",
         }
         runners.set(new_id, data)
-        subprocess.Popen([sys.executable, "web_testing/debug_run.py", str(new_id), temp.name])
+        subprocess.Popen([sys.executable, "web_testing/test_run.py", str(new_id), temp.name])
         return data
     return runners.get_latest()
 
