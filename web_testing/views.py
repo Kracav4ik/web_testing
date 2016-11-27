@@ -1,3 +1,9 @@
+import os
+import subprocess
+from tempfile import NamedTemporaryFile
+
+import sys
+from pyramid.response import Response
 from pyramid.view import view_config
 
 
@@ -160,20 +166,29 @@ def submit_page(request):
         file_contents = program_file.file.read().decode('utf-8')
         file_name = program_file.disposition_options["filename"]
         new_id = runners.new_id()
+        temp = NamedTemporaryFile(mode="w+", delete=False)
+        with temp:
+            temp.write(file_contents)
         data = {
+            "temp_file": temp.name,
             "submit_id": new_id,
             "contents": file_contents,
             "name": file_name,
             "status": "RUNNING",
         }
         runners.set(new_id, data)
+        subprocess.Popen([sys.executable, "web_testing/debug_run.py", str(new_id), temp.name])
         return data
     return runners.get_latest()
 
 
-@view_config(route_name='answer', renderer='templates/answer.jinja2')
+@view_config(route_name='answer')
 def answer_page(request):
-    print(request.GET.get("result"))
-    print(request.GET.get("run_id"))
-
-    return {}
+    run_id = request.GET.get("run_id")
+    if run_id:
+        result = request.GET.get("result")
+        run_id = int(run_id)
+        data = runners.get(run_id)
+        data["status"] = result
+        os.remove(data["temp_file"])
+    return Response('')
