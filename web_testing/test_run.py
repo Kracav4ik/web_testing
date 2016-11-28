@@ -33,13 +33,12 @@ def run_tests(program, path):
 
 
 if __name__ == '__main__':
-    tests_path = r'c:\git_guest\web_testing\olympiads\beasts\f'
-    run_id, program_path = sys.argv[1:]
-    result = run_tests(program_path, tests_path)
+    tests_path = r'c:\git_guest\web_testing\olympiads\beasts'
+    run_id, program_path, task_name = sys.argv[1:]
+    result = run_tests(program_path, os.path.join(tests_path, task_name))
 
     url = 'http://localhost:6543/answer'
     requests.get(url, params={
         "result": result,
         "run_id": run_id,
     })
-    time.sleep(2000)

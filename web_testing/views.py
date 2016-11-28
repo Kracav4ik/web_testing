@@ -6,6 +6,8 @@ import sys
 from pyramid.response import Response
 from pyramid.view import view_config
 
+path_to_task = r'C:\git_guest\web_testing\olympiads\beasts'
+
 
 class RunnersMap:
     def __init__(self):
@@ -162,6 +164,7 @@ def show_standings(request):
 @view_config(route_name='submit', renderer='templates/submit.jinja2')
 def submit_page(request):
     program_file = request.POST.get("program")
+    task_names = [(name, "Task %s" % name[0].upper()) for name in os.listdir(path_to_task)]
     if program_file is not None and program_file != b'':
         file_contents = program_file.file.read().decode('utf-8')
         file_name = program_file.disposition_options["filename"]
@@ -169,17 +172,19 @@ def submit_page(request):
         temp = NamedTemporaryFile(mode="w+", delete=False)
         with temp:
             temp.write(file_contents)
-        data = {
+        result = {
             "temp_file": temp.name,
             "submit_id": new_id,
             "contents": file_contents,
             "name": file_name,
             "status": "RUNNING",
         }
-        runners.set(new_id, data)
-        subprocess.Popen([sys.executable, "web_testing/test_run.py", str(new_id), temp.name])
-        return data
-    return runners.get_latest()
+        runners.set(new_id, result)
+        subprocess.Popen([sys.executable, "web_testing/test_run.py", str(new_id), temp.name, request.POST.get("task")])
+    else:
+        result = runners.get_latest()
+    result["task_names"] = task_names
+    return result
 
 
 @view_config(route_name='answer')

@@ -8,10 +8,13 @@
     <a href="home">Standings</a>
     <hr>
     <form action="/" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-        <label for="program">
-            Select file:
-        </label>
+        <label for="program">Select file:</label>
         <input type="file" value="" id="program" name="program">
+        <select name="task">
+            {% for value, text in task_names %}
+            <option value="{{ value }}">{{ text }}</option>
+            {% endfor %}
+        </select>
         <input type="submit" value="submit">
     </form>
     {% if contents %}
