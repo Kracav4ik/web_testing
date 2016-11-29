@@ -6,8 +6,6 @@ import tempfile
 import requests
 import sys
 
-import time
-
 
 def equal_files(path1, path2):
     file1 = open(path1)
@@ -28,17 +26,21 @@ def run_tests(program, path):
         shutil.copyfile(os.path.join(path, name), os.path.join(dir_name, "mark.in"))
         subprocess.run([sys.executable, "run.py"], cwd=dir_name, timeout=2)
         if not equal_files(os.path.join(dir_name, "mark.out"), os.path.join(path, "%s.a" % name)):
-            return "Failed on test %s (dir %s)" % (name, dir_name)
+            return "Failed on test %s" % name
     return "Passed"
 
 
 if __name__ == '__main__':
     tests_path = r'c:\git_guest\web_testing\olympiads\beasts'
-    run_id, program_path, task_name = sys.argv[1:]
-    result = run_tests(program_path, os.path.join(tests_path, task_name))
+    submit_id, program_path, task_name = sys.argv[1:]
+    # noinspection PyBroadException
+    try:
+        result = run_tests(program_path, os.path.join(tests_path, task_name))
+    except:
+        result = "Exception"
 
     url = 'http://localhost:6543/answer'
     requests.get(url, params={
         "result": result,
-        "run_id": run_id,
+        "submit_id": submit_id,
     })

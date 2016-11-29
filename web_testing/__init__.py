@@ -10,5 +10,6 @@ def main(global_config, **settings):
     config.add_route('submit', '/')
     config.add_route('home', '/home')
     config.add_route('answer', '/answer')
+    config.add_route('source', '/source')
     config.scan()
     return config.make_wsgi_app()

@@ -110,3 +110,18 @@ b {
     color: #c06060;
     font-weight: normal;
 }
+
+span.failure {
+    color: #c06060;
+    font-weight: bold;
+}
+
+span.success {
+    color: #60c060;
+    font-weight: bold;
+}
+
+span.progress {
+    color: black;
+    font-weight: bold;
+}

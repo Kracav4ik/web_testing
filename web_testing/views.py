@@ -1,17 +1,18 @@
 import os
 import subprocess
+from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 
 import sys
 from pyramid.response import Response
 from pyramid.view import view_config
 
-path_to_task = r'C:\git_guest\web_testing\olympiads\beasts'
+tests_path = r'C:\git_guest\web_testing\olympiads\beasts'
 
 
-class RunnersMap:
+class SubManager:
     def __init__(self):
-        self.runner_ids = {}
+        self.submission_ids = OrderedDict()
         self.next_id = 1
 
     def new_id(self):
@@ -19,16 +20,18 @@ class RunnersMap:
         return self.next_id - 1
 
     def get(self, key):
-        return self.runner_ids.get(key, {})
+        return self.submission_ids.get(key, {})
 
     def set(self, key, value):
-        self.runner_ids[key] = value
+        self.submission_ids[key] = value
 
     def get_latest(self):
-        return self.get(max(self.runner_ids.keys(), default=0))
+        return self.get(max(self.submission_ids.keys(), default=0))
 
+    def get_all(self):
+        return self.submission_ids.values()
 
-runners = RunnersMap()
+sub_manager = SubManager()
 
 
 class TaskInfo:
@@ -51,6 +54,20 @@ class TeamInfo:
             if v.is_solved:
                 i += 1
         return i
+
+
+@view_config(route_name='source', renderer='templates/source.jinja2')
+def source_page(request):
+    submit_id = request.GET.get("submit_id")
+    if submit_id:
+        # noinspection PyBroadException
+        try:
+            submit_id = int(submit_id)
+            submission = sub_manager.get(submit_id)
+            return {"contents": submission["contents"]}
+        except:
+            pass
+    return {}
 
 
 @view_config(route_name='home', renderer='templates/home.jinja2')
@@ -164,36 +181,38 @@ def show_standings(request):
 @view_config(route_name='submit', renderer='templates/submit.jinja2')
 def submit_page(request):
     program_file = request.POST.get("program")
-    task_names = [(name, "Task %s" % name[0].upper()) for name in os.listdir(path_to_task)]
+    task_names = [(name, "Task %s" % name[0].upper()) for name in os.listdir(tests_path)]
     if program_file is not None and program_file != b'':
         file_contents = program_file.file.read().decode('utf-8')
         file_name = program_file.disposition_options["filename"]
-        new_id = runners.new_id()
+        task_name = request.POST.get("task")
+        submit_id = sub_manager.new_id()
         temp = NamedTemporaryFile(mode="w+", delete=False)
         with temp:
             temp.write(file_contents)
-        result = {
+        submission = {
             "temp_file": temp.name,
-            "submit_id": new_id,
+            "submit_id": submit_id,
             "contents": file_contents,
+            "task_name": task_name,
             "name": file_name,
             "status": "RUNNING",
         }
-        runners.set(new_id, result)
-        subprocess.Popen([sys.executable, "web_testing/test_run.py", str(new_id), temp.name, request.POST.get("task")])
-    else:
-        result = runners.get_latest()
-    result["task_names"] = task_names
-    return result
+        sub_manager.set(submit_id, submission)
+        subprocess.Popen([sys.executable, "web_testing/test_run.py", str(submit_id), temp.name, task_name])
+    return {
+        'task_names': task_names,
+        'submissions': sub_manager.get_all(),
+    }
 
 
 @view_config(route_name='answer')
 def answer_page(request):
-    run_id = request.GET.get("run_id")
-    if run_id:
+    submit_id = request.GET.get("submit_id")
+    if submit_id:
         result = request.GET.get("result")
-        run_id = int(run_id)
-        data = runners.get(run_id)
-        data["status"] = result
-        os.remove(data["temp_file"])
+        submit_id = int(submit_id)
+        submission = sub_manager.get(submit_id)
+        submission["status"] = result
+        os.remove(submission["temp_file"])
     return Response('')

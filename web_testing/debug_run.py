@@ -8,5 +8,5 @@ if __name__ == '__main__':
     url = 'http://localhost:6543/answer'
     requests.get(url, params={
         "result": "awe",
-        "run_id": sys.argv[1],
+        "submit_id": sys.argv[1],
     })

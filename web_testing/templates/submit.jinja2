@@ -2,28 +2,43 @@
 <html>
 <head>
     <title>hello</title>
-    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="/static/theme.css">
 </head>
 <body>
-    <a href="home">Standings</a>
-    <hr>
-    <form action="/" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-        <label for="program">Select file:</label>
-        <input type="file" value="" id="program" name="program">
-        <select name="task">
-            {% for value, text in task_names %}
+<a href="home">Standings</a>
+<hr>
+<form action="/" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+    <label for="program">Select file:</label>
+    <input type="file" value="" id="program" name="program">
+    <select name="task">
+        {%- for value, text in task_names %}
             <option value="{{ value }}">{{ text }}</option>
+        {% endfor -%}
+    </select>
+    <input type="submit" value="submit">
+</form>
+<hr>
+<div style="text-align: left;">
+    {% for value, text in task_names %}
+        <h2 style="text-align: left;">{{ text }}</h2>
+        {% set items = submissions|selectattr("task_name", "equalto", value) %}
+        <ul>
+            {% for item in items %}
+                <li>id #{{ item.submit_id }} <a href="/source?submit_id={{ item.submit_id }}" target="_blank">source code</a>
+                    <span class="
+                            {#- this is a horrible hardcode based on test_run.py output -#}
+                            {%- if item.status == "RUNNING" -%}
+                                progress
+                            {%- elif item.status == "Passed" -%}
+                                success
+                            {%- else -%}
+                                failure
+                            {%- endif -%}
+                        ">{{ item.status }}</span>
+                </li>
             {% endfor %}
-        </select>
-        <input type="submit" value="submit">
-    </form>
-    {% if contents %}
-        <hr>
-        id #{{ submit_id }}<b> file name: '{{ name }}'</b> {{ status }}
-        <hr>
-        <div style="text-align: left;">
-            <pre>{{ contents }}</pre>
-        </div>
-    {% endif %}
+        </ul>
+    {% endfor %}
+</div>
 </body>
 </html>
