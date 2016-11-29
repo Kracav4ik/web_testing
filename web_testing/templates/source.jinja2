@@ -2,11 +2,11 @@
 <html>
 <head>
     <title>src</title>
-    <link rel="stylesheet" href="/static/theme.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/androidstudio.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
-<body>
+<body class="hljs">
+<pre><code class="language-python">{{ contents }}</code></pre>
 </body>
-<div style="text-align: left;">
-    <pre>{{ contents }}</pre>
-</div>
 </html>
